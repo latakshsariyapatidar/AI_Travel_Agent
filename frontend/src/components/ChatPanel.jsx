@@ -59,12 +59,12 @@ const ChatPanel = ({ messages, onSendMessage, isLoading }) => {
           onKeyDown={handleKeyDown}
           disabled={isLoading}
           placeholder="Type your message..."
-          className="flex-1 text-sm bg-white px-4 py-3 border border-neutral-200 rounded-lg min-h-[44px] transition-all duration-200 outline-none placeholder-gray-400 focus:border-blue-600 focus:ring-3 focus:ring-blue-600/10 disabled:opacity-50 disabled:bg-gray-50"
+          className="flex-1 text-sm bg-white px-4 py-3 border border-neutral-200 rounded-lg min-h-11 transition-all duration-200 outline-none placeholder-gray-400 focus:ring-3 focus:ring-blue-600/10 disabled:opacity-50"
         />
         <button
           onClick={handleSend}
           disabled={isLoading}
-          className={`text-sm font-medium text-white transition-colors duration-200 min-h-[44px] px-4 rounded-lg border-none ${
+          className={`text-sm font-medium text-white transition-colors duration-200 min-h-11 px-4 rounded-lg border-none ${
             isLoading ? 'bg-blue-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 cursor-pointer'
           }`}
         >
