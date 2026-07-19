@@ -3,15 +3,17 @@ import express from "express";
 import connectToDb from "./utils/db.js";
 import cors from "cors";
 import chatRouter from "./routes/chat.routes.js";
+import leadsRouter from "./routes/leads.routes.js";
+import { rateLimiter } from "./middleware/rateLimiter.js";
 
 config();
-
 
 const app = express();
 
 app.use(express.json());
 app.use(cors());
 
+app.use("/api", rateLimiter);
 // This is applied beacause while deploying the app will be behind a proxy so in order to know the real IP address of the client this is used.
 app.set('trust proxy', 1);
 
@@ -19,6 +21,7 @@ app.set('trust proxy', 1);
 await connectToDb();
 
 app.use("/api/chat", chatRouter);
+app.use("/api/leads", leadsRouter);
 
 app.get("/health", (req, res) => {
     res.status(200).json({

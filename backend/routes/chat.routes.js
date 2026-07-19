@@ -3,7 +3,7 @@ import { callGemini } from '../services/gemini.service.js';
 import { calculateScore } from '../services/score.service.js';
 import { upsertConversation, upsertLeadDraft, upsertLead } from '../services/data.service.js';
 
-const chatRouter = express.Router();
+const router = express.Router();
 
 const DEFAULT_FIELDS = {
     destination: null,
@@ -19,7 +19,7 @@ const DEFAULT_FIELDS = {
     email: null
 };
 
-chatRouter.post('/', async (req, res) => {
+router.post('/', async (req, res) => {
     try {
         const { conversationId, messages = [], userMessage, summary = "" } = req.body;
 
@@ -60,4 +60,4 @@ chatRouter.post('/', async (req, res) => {
     }
 });
 
-export default chatRouter;
+export default router;
