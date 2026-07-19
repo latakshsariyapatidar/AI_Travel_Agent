@@ -86,6 +86,6 @@ export function calculateScore(fields) {
         reason,
         summary,
         readyToCapture: leadScore >= 50 && !fields.name,
-        leadReady: leadScore >= 65 && fields.name && fields.phone
+        leadReady: Boolean(leadScore >= 65 && fields.name && fields.phone)
     };
 }
