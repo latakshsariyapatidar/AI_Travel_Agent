@@ -29,7 +29,7 @@ This is the overarching architecture and documentation for the AI Travel Assista
 
 ## Project Overview
 
-Travel companies receive thousands of enquiries daily. Most users are exploring — only a fraction are genuine buyers. This application is an AI-powered travel assistant that:
+This application is an AI-powered travel assistant that:
 
 - Converses naturally with users to understand their travel requirements
 - Continuously extracts structured travel data from natural language
@@ -37,7 +37,6 @@ Travel companies receive thousands of enquiries daily. Most users are exploring 
 - Detects genuine buying intent and captures qualified leads
 - Stores qualified leads with full contact and travel details for follow-up by a travel consultant
 
-The assistant never feels like a form. It asks one question at a time, builds context gradually, and only asks for contact details once the user has demonstrated sufficient intent.
 
 ---
 
@@ -48,8 +47,6 @@ Prior to implementation, the following updates were made to the High-Level Desig
 - **Three MongoDB Collections**: Split storage into `leads` (qualified only), `conversations` (history + summary), and `lead_drafts` (partial state per conversation, updated every turn). This enables chat resumption even if a user leaves mid-conversation.
 - **API Contracts**: Modified the Chat Endpoint to return RAW structured data for extracted fields instead of heavily pre-processed statuses. The server computes score and flags — the frontend just renders.
 - **Lead Retrieval**: Updated the Specific Lead Endpoint logic to check `lead_drafts` first, then return from `leads` if the conversation ever reached the qualification threshold.
-- **Qualification Thresholds**: Tightened the scoring criteria. `readyToCapture` increased from 40 to 50; `leadReady` increased from 60 to 65. Confidence mappings adjusted accordingly.
-- **Get Data Service**: Renamed from "Get Lead Data Service" — called on every turn to return the latest lead state to the frontend for the live panel.
 
 ---
 
@@ -92,12 +89,7 @@ React Frontend (Chat Panel + Live Lead Panel)
 | Backend | Node.js + Express | Lightweight, JSON-native, easy middleware |
 | Database | MongoDB Atlas (Free Tier) | Document-native, fits lead structure, free |
 | AI Model | Gemini 3.1 Flash Lite | Best free-tier quality (Intelligence Index 34 vs 16 for 2.5), 500 RPD, 15 RPM |
-| Rate Limiting | express-rate-limit | Respects Gemini free tier caps |
 
-**Why Gemini 3.1 Flash Lite over alternatives:**
-- Groq (Llama 3.3 70B): 1,000 RPD but only 6,000 TPM — hits token limits fast with a large system prompt
-- Gemini 2.5 Flash Lite: 250 RPD vs 500 RPD, and Intelligence Index of 16 vs 34
-- Anthropic Claude: No sustained free tier (one-time $5 credit only)
 
 **Why rule-based scoring over AI scoring:**
 Letting the AI score itself introduces non-determinism — the same conversation could score differently across runs. A pure JS additive scoring function is predictable, testable, and fully explainable in this document.
@@ -215,6 +207,7 @@ Same field structure as Lead, but written on every turn regardless of score. Act
     { "role": "user",  "content": "I want to plan a trip to Bali" },
     { "role": "model", "content": "How exciting! When are you thinking of going?" }
   ],
+  "summary" : "The conversation just started",
   "userMessage": "This December, for our honeymoon"
 }
 ```
@@ -257,7 +250,7 @@ Same field structure as Lead, but written on every turn regardless of score. Act
 
 ### `GET /api/leads`
 
-Returns all qualified leads. Used for verification and Loom demo.
+Returns all qualified leads. Used for verification.
 
 **Response**
 ```json
@@ -311,7 +304,7 @@ async function callGemini(messages, userMessage)
 - Applies additive scoring rules (see Score Calculator section)
 - Returns score, confidence, reason string, summary string, and qualification flags
 
-**Why not AI-based scoring:** Deterministic rule-based scoring is predictable, testable with unit tests, and fully explainable — which the assignment explicitly requires. The same inputs always produce the same score.
+**Why not AI-based scoring:** Deterministic rule-based scoring is predictable, testable with unit tests, and fully explainable. The same inputs always produce the same score.
 
 **Function signature:**
 ```js
@@ -424,7 +417,8 @@ FIELD PRIORITY (gather roughly in this order):
 6. Departure city
 7. Duration
 8. Special requirements
-9. Name → Phone → Email (optional)
+9. Name → Phone
+10. Email
 
 After EVERY response, append a JSON block between these exact delimiters.
 This is parsed by the server — never mention it to the user.
@@ -462,10 +456,10 @@ JSON RULES:
 
 ## Frontend State Management
 
-All state lives in `useChat.js` and is passed down as props. The backend is stateless — the frontend owns the message history and sends it with every request.
+All state lives in `useChat.js` and is passed down as props. While the frontend manages the local state for rapid UI updates, the message history is permanently stored in the backend database. On initial load, the frontend fetches the existing message history and lead draft state using the `conversationId` to ensure the chat fully persists across reloads.
 
 ```js
-// Message history — sent with every request
+// Message history — initialized from backend on load, updated locally
 const [messages, setMessages] = useState([]);
 // { id, role: 'user'|'assistant', content, timestamp }
 
@@ -512,6 +506,9 @@ App
 ```
 
 ---
+
+
+
 
 ## Rate Limiting
 
@@ -560,9 +557,9 @@ This is a feature beyond the spec requirements. When a user returns to the app m
 
 1. `sessionStorage` preserves the `conversationId` across page reloads
 2. On load, the frontend calls `GET /api/leads/:conversationId`
-3. The server reads from `lead_drafts` (written every turn) and returns the last known lead state
-4. The frontend restores `extractedFields` and `qualification` from this response
-5. The user can continue from where they left off — the AI receives the conversation history from the frontend state, which is also restored from the `lead_drafts` document
+3. The server reads the lead state from `lead_drafts` and the message history from `conversations`.
+4. The frontend restores `messages`, `extractedFields`, and `qualification` from this response.
+5. The user can continue from where they left off seamlessly — the chat UI is fully restored from the database and no context is lost.
 
 This means no partial lead data is ever lost even if the user closes the tab.
 
@@ -572,15 +569,15 @@ This means no partial lead data is ever lost even if the user closes the tab.
 
 | Scenario | System Behaviour | Design Decision |
 |---|---|---|
-| User shares contact info very early | Accepted gracefully. Name/phone stored in `extractedFields`. Score stays low until travel details accumulate. `leadReady` stays false until score ≥ 65. | Don't penalise volunteered info — user trust matters |
-| User refuses contact details | Conversation continues helpfully. Score capped at ~75 (no name/phone points). Lead never saved to `leads`. `lead_drafts` still updated. | Respecting user choice > forcing a lead |
-| Interest drops mid-conversation | AI does not push. `readyToCapture` and `leadReady` remain false. No lead saved. | Pushy assistants damage brand trust |
-| Vague travel date ("sometime next year") | Accepted and stored as-is. +8 points instead of +15. Detected via regex on the date string. | Partial intent is still intent |
-| AI fails to append JSON block | Backend catches parse error. Reply returned to user. All fields set to null. Re-extraction attempted next turn from full history. | Graceful degradation over silent failure |
-| Double submission (same message sent twice) | All DB writes use upsert on `conversationId`. Document overwritten, not duplicated. | Idempotency at the DB layer |
-| Partial contact (name but no phone) | `leadReady` remains false. Name stored and displayed in live panel. AI naturally follows up for phone. | Score gates the save, not just presence of any contact |
-| User asks off-topic questions | Assistant answers briefly and steers back to travel planning naturally. | Staying helpful without being a strict form |
-| Very long conversation (>8 messages) | History trimmed to last 8 before sending to Gemini. A summary of earlier turns is generated and prepended as context. | TPM management without losing context |
+| User shares contact info very early | Accepted gracefully. Name/phone stored in `extractedFields`. Score stays low until travel details accumulate. `leadReady` stays false until score ≥ 65. |  |
+| User refuses contact details | Conversation continues helpfully. Score capped at ~75 (no name/phone points). Lead never saved to `leads`. `lead_drafts` still updated. |  |
+| Interest drops mid-conversation | AI does not push. `readyToCapture` and `leadReady` remain false. No lead saved. |  |
+| Vague travel date ("sometime next year") | Accepted and stored as-is. +8 points instead of +15. Detected via regex on the date string. ||
+| AI fails to append JSON block | Backend catches parse error. Reply returned to user. All fields set to null. Re-extraction attempted next turn from full history. |  |
+| Double submission (same message sent twice) | All DB writes use upsert on `conversationId`. Document overwritten, not duplicated. | |
+| Partial contact (name but no phone) | `leadReady` remains false. Name stored and displayed in live panel. AI naturally follows up for phone. | |
+| User asks off-topic questions | Assistant answers briefly and steers back to travel planning naturally. |  |
+| Very long conversation (>8 messages) | History trimmed to last 8 before sending to Gemini. A summary of earlier turns is generated and prepended as context. |  |
 
 ---
 
