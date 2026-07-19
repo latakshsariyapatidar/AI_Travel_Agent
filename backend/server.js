@@ -2,6 +2,7 @@ import { config } from "dotenv";
 import express from "express";
 import connectToDb from "./utils/db.js";
 import cors from "cors";
+import chatRouter from "./routes/chat.routes.js";
 
 config();
 
@@ -17,12 +18,16 @@ app.set('trust proxy', 1);
 
 await connectToDb();
 
+app.use("/api/chat", chatRouter);
+
 app.get("/health", (req, res) => {
     res.status(200).json({
         "message": "Backend is healthy",
         "status": "success"
     });
 });
+
+
 
 
 app.listen(process.env.PORT || 3000, () => {
