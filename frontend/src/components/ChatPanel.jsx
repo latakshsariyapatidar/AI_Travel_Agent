@@ -27,7 +27,7 @@ const ChatPanel = ({ messages, onSendMessage, isLoading }) => {
   };
 
   return (
-    <div className="flex-1 flex flex-col p-8 md:border-r border-b md:border-b-0 border-neutral-200 min-h-0 bg-white">
+    <div className="flex-1 flex flex-col p-4 md:p-8 min-h-0 bg-white w-full">
       {/* Message Area */}
       <div className="flex-1 overflow-y-auto flex flex-col gap-4 mb-5 pr-2">
         {messages.map((msg, index) => (
