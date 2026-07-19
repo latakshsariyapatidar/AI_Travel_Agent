@@ -17,7 +17,7 @@ const ChatView = ({ showSidebar, setShowSidebar }) => {
 
       {/* Mobile Backdrop */}
       {showSidebar && (
-        <div 
+        <div
           className="md:hidden fixed inset-0 bg-black/20 z-40"
           onClick={() => setShowSidebar(false)}
         />
@@ -25,8 +25,8 @@ const ChatView = ({ showSidebar, setShowSidebar }) => {
 
       {/* Sidebar / Lead Panel */}
       <div className={`
-        absolute right-0 top-0 bottom-0 z-50 w-[85vw] max-w-[340px] bg-neutral-50 shadow-2xl transition-transform duration-300 ease-in-out flex flex-col
-        md:static md:w-[380px] md:max-w-none md:shadow-none md:translate-x-0 md:border-l md:border-neutral-200
+        absolute right-0 top-0 bottom-0 z-50 w-[85vw] max-w-85 bg-neutral-50 shadow-2xl transition-transform duration-300 ease-in-out flex flex-col
+        md:static md:w-95 md:max-w-none md:shadow-none md:translate-x-0 md:border-l md:border-neutral-200
         ${showSidebar ? 'translate-x-0' : 'translate-x-full'}
       `}>
         <div className="md:hidden flex items-center justify-between px-6 py-4 border-b border-neutral-200 bg-white">
@@ -74,40 +74,38 @@ const App = () => {
         </div>
 
         <nav className="flex items-center gap-1 sm:gap-2 shrink-0">
-          <Link 
-            to="/" 
-            className={`text-sm font-medium px-3 sm:px-4 py-2 rounded-lg transition-colors ${
-              location.pathname === '/' ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-gray-100'
-            }`}
+          <Link
+            to="/"
+            className={`text-sm font-medium px-3 sm:px-4 py-2 rounded-lg transition-colors ${location.pathname === '/' ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-gray-100'
+              }`}
           >
             Chat
           </Link>
-          <Link 
-            to="/leads" 
-            className={`text-sm font-medium px-3 sm:px-4 py-2 rounded-lg transition-colors ${
-              location.pathname === '/leads' ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-gray-100'
-            }`}
+          <Link
+            to="/leads"
+            className={`text-sm font-medium px-3 sm:px-4 py-2 rounded-lg transition-colors ${location.pathname === '/leads' ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-gray-100'
+              }`}
           >
             Leads
           </Link>
-          
-          {location.pathname === '/' && (
-            <div className="flex items-center gap-4 ml-2 sm:ml-4 pl-2 sm:pl-4 border-l border-gray-200">
-              <div className="hidden md:flex items-center gap-2">
-                <span className="relative flex h-2 w-2">
-                  {isBackendActive && <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>}
-                  <span className={`relative inline-flex rounded-full h-2 w-2 ${isBackendActive ? 'bg-green-500' : 'bg-red-500'}`} />
-                </span>
-                <span className="text-[12px] text-gray-500">{isBackendActive ? 'Active' : 'Inactive'}</span>
-              </div>
-              <button 
-                className="md:hidden text-sm bg-blue-50 text-blue-600 px-3 py-1.5 rounded-md font-medium shrink-0"
-                onClick={() => setShowSidebar(true)}
-              >
-                Details
-              </button>
+
+
+          <div className="flex items-center gap-4 ml-2 sm:ml-4 pl-2 sm:pl-4 border-l border-gray-200">
+            <div className="hidden md:flex items-center gap-2">
+              <span className="relative flex h-2 w-2">
+                {isBackendActive && <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>}
+                <span className={`relative inline-flex rounded-full h-2 w-2 ${isBackendActive ? 'bg-green-500' : 'bg-red-500'}`} />
+              </span>
+              <span className="text-[12px] text-gray-500">{isBackendActive ? 'Active' : 'Inactive'}</span>
             </div>
-          )}
+            <button
+              className="md:hidden text-sm bg-blue-50 text-blue-600 px-3 py-1.5 rounded-md font-medium shrink-0"
+              onClick={() => setShowSidebar(true)}
+            >
+              Details
+            </button>
+          </div>
+
         </nav>
       </header>
 
