@@ -20,7 +20,7 @@ const LeadPanel = ({ capturedFields, leadScore, confidence }) => {
         </h2>
         <div className='flex gap-5'>
           <FieldRow label="Destination" value={capturedFields.destination} />
-          <FieldRow label="Departure City" value={capturedFields.departureCity} />
+
         </div>
       </div>
 

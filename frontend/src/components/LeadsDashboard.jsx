@@ -81,10 +81,6 @@ const LeadsDashboard = () => {
                     <span className="block text-[11px] font-bold uppercase text-gray-400 tracking-wider mb-1">Type</span>
                     <span className="text-sm font-medium text-gray-800">{lead.travel.tripType || '—'}</span>
                   </div>
-                  <div>
-                    <span className="block text-[11px] font-bold uppercase text-gray-400 tracking-wider mb-1">Departure</span>
-                    <span className="text-sm font-medium text-gray-800">{lead.travel.departureCity || '—'}</span>
-                  </div>
                 </div>
 
                 {/* Summary */}
