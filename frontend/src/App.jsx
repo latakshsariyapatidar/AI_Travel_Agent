@@ -1,5 +1,5 @@
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ChatPanel from './components/ChatPanel';
 import LeadPanel from './components/LeadPanel';
 import LeadsDashboard from './components/LeadsDashboard';
@@ -48,6 +48,22 @@ const ChatView = ({ showSidebar, setShowSidebar }) => {
 const App = () => {
   const location = useLocation();
   const [showSidebar, setShowSidebar] = useState(false);
+  const [isBackendActive, setIsBackendActive] = useState(false);
+
+  useEffect(() => {
+    const checkHealth = async () => {
+      try {
+        const res = await fetch('/health');
+        setIsBackendActive(res.ok);
+      } catch (err) {
+        setIsBackendActive(false);
+      }
+    };
+    checkHealth();
+    // Poll every 30 seconds
+    const interval = setInterval(checkHealth, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="flex flex-col h-screen w-full font-sans bg-gray-50 overflow-hidden">
@@ -79,9 +95,10 @@ const App = () => {
             <div className="flex items-center gap-4 ml-2 sm:ml-4 pl-2 sm:pl-4 border-l border-gray-200">
               <div className="hidden md:flex items-center gap-2">
                 <span className="relative flex h-2 w-2">
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
+                  {isBackendActive && <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>}
+                  <span className={`relative inline-flex rounded-full h-2 w-2 ${isBackendActive ? 'bg-green-500' : 'bg-red-500'}`} />
                 </span>
-                <span className="text-[12px] text-gray-500">Active</span>
+                <span className="text-[12px] text-gray-500">{isBackendActive ? 'Active' : 'Inactive'}</span>
               </div>
               <button 
                 className="md:hidden text-sm bg-blue-50 text-blue-600 px-3 py-1.5 rounded-md font-medium shrink-0"

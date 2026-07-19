@@ -40,6 +40,10 @@ export const useChat = () => {
           // Map DB history ({role, content}) to UI format ({role, text}) if needed, or just use content
           if (lead.history && lead.history.length > 0) {
             setMessages(lead.history.map(m => ({ role: m.role, text: m.content })));
+          } else {
+            setMessages([
+              { role: 'assistant', text: 'Hi! I am your AI Travel Assistant. Where would you like to travel?' }
+            ]);
           }
           if (lead.travel || lead.customer) {
             setExtractedFields({
