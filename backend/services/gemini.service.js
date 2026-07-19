@@ -24,11 +24,11 @@ export async function callGemini(messages, userMessage) {
 
     try {
         const response = await ai.models.generateContent({
-            model: 'gemini-2.5-flash',
+            model: process.env.GEMINI_MODEL,
             contents,
             config: {
                 systemInstruction: SystemPrompt,
-                temperature: 0.3,
+                temperature: parseFloat(process.env.GEMINI_MODEL_TEMPERATURE),
             }
         });
 
