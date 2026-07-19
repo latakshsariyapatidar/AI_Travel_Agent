@@ -25,8 +25,8 @@ const ChatView = ({ showSidebar, setShowSidebar }) => {
 
       {/* Sidebar / Lead Panel */}
       <div className={`
-        absolute right-0 top-0 bottom-0 z-50 w-[85vw] max-w-[340px] bg-neutral-50 shadow-2xl transition-transform duration-300 ease-in-out flex flex-col
-        md:static md:w-[380px] md:max-w-none md:shadow-none md:translate-x-0 md:border-l md:border-neutral-200
+        absolute right-0 top-0 bottom-0 z-50 w-[85vw] max-w-85 bg-neutral-50 shadow-2xl transition-transform duration-300 ease-in-out flex flex-col
+        md:static md:w-95 md:max-w-none md:shadow-none md:translate-x-0 md:border-l md:border-neutral-200
         ${showSidebar ? 'translate-x-0' : 'translate-x-full'}
       `}>
         <div className="md:hidden flex items-center justify-between px-6 py-4 border-b border-neutral-200 bg-white">
@@ -55,7 +55,7 @@ const App = () => {
       try {
         const res = await fetch('/health');
         setIsBackendActive(res.ok);
-      } catch (err) {
+      } catch {
         setIsBackendActive(false);
       }
     };
