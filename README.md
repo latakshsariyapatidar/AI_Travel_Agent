@@ -52,7 +52,7 @@ Prior to implementation, the following updates were made to the High-Level Desig
 
 ## High Level Design (HLD)
 
-![Backend HLD](./public/HLD_Updated.png)
+![Backend HLD](./docs/HLD_Updated.png)
 
 The HLD shows the full request lifecycle:
 
