@@ -5,14 +5,9 @@ const MessageBubble = ({ message }) => {
   return (
     <div className={`flex w-full ${isUser ? 'justify-end' : 'justify-start'} animate-pop`}>
       <div
-        className="text-[14px] leading-[1.6]"
-        style={{
-          backgroundColor: isUser ? 'var(--color-accent)' : '#f0f0f0',
-          color: isUser ? '#ffffff' : 'var(--color-primary)',
-          padding: '12px 16px',
-          borderRadius: 'var(--radius-lg)',
-          maxWidth: '70%',
-        }}
+        className={`text-sm leading-relaxed px-4 py-3 rounded-xl max-w-[70%] ${
+          isUser ? 'bg-blue-600 text-white' : 'bg-neutral-100 text-neutral-950'
+        }`}
       >
         {message.text}
       </div>

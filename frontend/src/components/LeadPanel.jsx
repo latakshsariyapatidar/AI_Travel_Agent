@@ -3,7 +3,7 @@ import ScoreBadge from './ScoreBadge';
 
 const LeadPanel = ({ capturedFields, leadScore, confidence }) => {
   return (
-    <div className="w-full md:w-90 shrink-0 p-6 bg-(--color-light) overflow-y-auto border-t md:border-t-0 md:border-l border-(--color-neutral) h-full">
+    <div className="w-full md:w-90 shrink-0 p-6 bg-neutral-50 overflow-y-auto border-t md:border-t-0 md:border-l border-neutral-200 h-full">
 
       {/* Lead Score Section */}
       <div className="flex flex-col gap-3 mb-5">

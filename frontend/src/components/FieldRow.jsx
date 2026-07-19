@@ -8,16 +8,11 @@ const FieldRow = ({ label, value }) => {
         {label}
       </span>
       <div
-        className="flex items-center text-xs font-medium transition-colors duration-200 rounded-sm"
-        style={{
-          padding: '3px 12px',
-          minHeight: '30px',
-          borderWidth: '1px',
-          borderStyle: 'solid',
-          borderColor: isFilled ? '#86efac' : 'var(--color-neutral)',
-          backgroundColor: isFilled ? '#f9fafb' : '#ffffff',
-          color: isFilled ? '#166534' : '#cccccc',
-        }}
+        className={`flex items-center text-xs font-medium transition-colors duration-200 rounded-sm px-3 py-[3px] min-h-[30px] border ${
+          isFilled 
+            ? 'border-green-300 bg-gray-50 text-green-800' 
+            : 'border-neutral-200 bg-white text-gray-300'
+        }`}
       >
         {isFilled ? value : 'Not yet shared'}
       </div>
