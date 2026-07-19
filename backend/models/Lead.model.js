@@ -14,7 +14,7 @@ const leadSchema = new mongoose.Schema(
         },
         travel: {
             destination: { type: String, default: null },
-            departureCity: { type: String, default: null },
+
             travelDate: { type: String, default: null },
             travellers: { type: Number, default: null },
             budget: { type: String, default: null },

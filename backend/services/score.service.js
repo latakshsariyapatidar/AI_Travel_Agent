@@ -47,12 +47,6 @@ export function calculateScore(fields) {
         summaryBits.push(`for a ${fields.tripType} trip`);
     }
 
-    if (fields.departureCity) {
-        score += 5;
-        tags.push("Departure city");
-        summaryBits.push(`departing from ${fields.departureCity}`);
-    }
-
     if (fields.specialRequirements) {
         score += 5;
         tags.push("Special requirements");
