@@ -55,7 +55,7 @@ const App = () => {
       try {
         const res = await fetch('/health');
         setIsBackendActive(res.ok);
-      } catch (err) {
+      } catch {
         setIsBackendActive(false);
       }
     };

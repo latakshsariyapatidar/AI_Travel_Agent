@@ -5,7 +5,7 @@ export const useChat = () => {
   const [messages, setMessages] = useState([]);
   const [extractedFields, setExtractedFields] = useState({
     destination: null,
-    departureCity: null,
+
     travelDate: null,
     travellers: null,
     budget: null,
