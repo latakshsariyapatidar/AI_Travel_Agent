@@ -1,10 +1,9 @@
-import React from 'react';
 
 const MessageBubble = ({ message }) => {
   const isUser = message.role === 'user';
 
   return (
-    <div className={`flex w-full ${isUser ? 'justify-end' : 'justify-start'} animate-slide-in`}>
+    <div className={`flex w-full ${isUser ? 'justify-end' : 'justify-start'} animate-pop`}>
       <div
         className="text-[14px] leading-[1.6]"
         style={{

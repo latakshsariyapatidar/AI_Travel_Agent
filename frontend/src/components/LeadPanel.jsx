@@ -1,47 +1,52 @@
-import React from 'react';
 import FieldRow from './FieldRow';
 import ScoreBadge from './ScoreBadge';
 
 const LeadPanel = ({ capturedFields, leadScore, confidence }) => {
   return (
-    <div className="w-full md:w-[280px] shrink-0 p-[24px] bg-[var(--color-light)] overflow-y-auto border-t md:border-t-0 md:border-l border-[var(--color-neutral)] h-full">
-      
-      {/* Trip Info Section */}
-      <div className="flex flex-col gap-[12px] mb-[24px]">
-        <h2 className="text-[12px] uppercase font-bold tracking-[0.5px] text-[#888888]">
-          Trip Info
-        </h2>
-        <FieldRow label="Destination" value={capturedFields.destination} />
-        <FieldRow label="Departure City" value={capturedFields.departureCity} />
-      </div>
-
-      {/* Travel Details Section */}
-      <div className="flex flex-col gap-[12px] mb-[24px]">
-        <h2 className="text-[12px] uppercase font-bold tracking-[0.5px] text-[#888888]">
-          Travel Details
-        </h2>
-        <FieldRow label="Travel Month" value={capturedFields.travelMonth} />
-        <FieldRow label="Travellers" value={capturedFields.travellers} />
-        <FieldRow label="Budget" value={capturedFields.budget} />
-        <FieldRow label="Trip Type" value={capturedFields.tripType} />
-      </div>
-
-      {/* Contact Info Section */}
-      <div className="flex flex-col gap-[12px] mb-[24px]">
-        <h2 className="text-[12px] uppercase font-bold tracking-[0.5px] text-[#888888]">
-          Contact Info
-        </h2>
-        <FieldRow label="Name" value={capturedFields.name} />
-        <FieldRow label="Email" value={capturedFields.email} />
-        <FieldRow label="Phone" value={capturedFields.phone} />
-      </div>
+    <div className="w-full md:w-90 shrink-0 p-6 bg-(--color-light) overflow-y-auto border-t md:border-t-0 md:border-l border-(--color-neutral) h-full">
 
       {/* Lead Score Section */}
-      <div className="flex flex-col gap-[12px]">
-        <h2 className="text-[12px] uppercase font-bold tracking-[0.5px] text-[#888888]">
+      <div className="flex flex-col gap-3 mb-5">
+        <h2 className="text-sm uppercase font-bold tracking-[0.5px] text-zinc-600">
           Score
         </h2>
         <ScoreBadge score={leadScore} confidence={confidence} />
+      </div>
+
+      {/* Trip Info Section */}
+      <div className="flex flex-col gap-1 mb-6">
+        <h2 className="text-sm uppercase font-bold text-zinc-600">
+          Trip Info
+        </h2>
+        <div className='flex gap-5'>
+          <FieldRow label="Destination" value={capturedFields.destination} />
+          <FieldRow label="Departure City" value={capturedFields.departureCity} />
+        </div>
+      </div>
+
+      {/* Travel Details Section */}
+      <div className="flex flex-col gap-3 mb-6">
+        <h2 className="text-sm uppercase font-bold tracking-[0.5px] text-zinc-600">
+          Travel Details
+        </h2>
+        <div className='grid grid-cols-2 gap-x-5 gap-y-2'>
+          <FieldRow label="Budget" value={capturedFields.budget} />
+          <FieldRow label="Travel Month" value={capturedFields.travelMonth} />
+          <FieldRow label="Trip Type" value={capturedFields.tripType} />
+          <FieldRow label="Travellers" value={capturedFields.travellers} />
+        </div>
+      </div>
+
+      {/* Contact Info Section */}
+      <div className="flex flex-col gap-3 mb-6">
+        <h2 className="text-sm uppercase font-bold tracking-[0.5px] text-zinc-600">
+          Contact Info
+        </h2>
+        <div className='grid grid-cols-2 gap-x-5 gap-y-2'>
+          <FieldRow label="Name" value={capturedFields.name} />
+          <FieldRow label="Email" value={capturedFields.email} />
+          <FieldRow label="Phone" value={capturedFields.phone} />
+        </div>
       </div>
 
     </div>
