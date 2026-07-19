@@ -9,11 +9,10 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.use("/api", rateLimiter);
 // This is applied beacause while deploying the app will be behind a proxy so in order to know the real IP address of the client this is used.
 app.set('trust proxy', 1);
 
-app.use("/api/chat", chatRouter);
+app.use("/api/chat", rateLimiter, chatRouter);
 app.use("/api/leads", leadsRouter);
 
 app.get("/health", (req, res) => {

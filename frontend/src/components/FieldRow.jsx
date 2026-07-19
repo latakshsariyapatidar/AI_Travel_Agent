@@ -10,8 +10,8 @@ const FieldRow = ({ label, value }) => {
       <div
         className={`flex items-center text-xs font-medium transition-colors duration-200 rounded-sm px-3 py-[3px] min-h-[30px] border ${
           isFilled 
-            ? 'border-green-300 bg-gray-50 text-green-800' 
-            : 'border-neutral-200 bg-white text-gray-300'
+            ? 'border-gray-200 bg-gray-50 text-gray-900' 
+            : 'border-gray-200 bg-white text-gray-400'
         }`}
       >
         {isFilled ? value : 'Not yet shared'}
