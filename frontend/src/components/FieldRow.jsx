@@ -8,7 +8,7 @@ const FieldRow = ({ label, value }) => {
         {label}
       </span>
       <div
-        className={`flex items-center text-xs font-medium transition-colors duration-200 rounded-sm px-3 py-[3px] min-h-[30px] border ${
+        className={`flex items-center text-xs font-medium transition-colors duration-200 rounded-sm px-3 py-0.75 min-h-7.5 border ${
           isFilled 
             ? 'border-gray-200 bg-gray-50 text-gray-900' 
             : 'border-gray-200 bg-white text-gray-400'
