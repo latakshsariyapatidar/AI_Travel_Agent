@@ -1,49 +1,9 @@
-import { useState } from 'react';
 import ChatPanel from './components/ChatPanel';
 import LeadPanel from './components/LeadPanel';
-
+import { useChat } from './hooks/useChat';
 
 const App = () => {
-  const [isTyping, setIsTyping] = useState(false);
-  // Static snapshot of mock data as requested
-  const [conversationState, setConversationState] = useState({
-    messages: [
-      { role: 'assistant', text: 'Hi! I can help you plan your next trip. Where would you like to go?' },
-      { role: 'user', text: 'I want to go to Bali in December.' },
-      { role: 'assistant', text: 'Bali in December is beautiful! How many people are traveling and what is your budget?' },
-      { role: 'user', text: 'Just me and my partner. We want a luxury experience, budget is around $5000.' },
-    ],
-    capturedFields: {
-      destination: 'Bali',
-      departureCity: null,
-      travelMonth: 'December',
-      travellers: '2',
-      budget: '$5000',
-      tripType: 'Luxury',
-      name: null,
-      email: null,
-      phone: null,
-    },
-    leadScore: 65,
-    confidence: 'Medium',
-  });
-
-  const handleSendMessage = (text) => {
-    setConversationState((prev) => ({
-      ...prev,
-      messages: [...prev.messages, { role: 'user', text }],
-    }));
-    
-    setIsTyping(true);
-    // Optional: simulate a fake assistant reply after 1 second
-    setTimeout(() => {
-      setIsTyping(false);
-      setConversationState((prev) => ({
-        ...prev,
-        messages: [...prev.messages, { role: 'assistant', text: 'Thanks for sharing! I have updated your travel profile.' }],
-      }));
-    }, 1500);
-  };
+  const { messages, extractedFields, qualification, isLoading, sendMessage } = useChat();
 
   return (
     <div className="flex flex-col h-screen w-full font-sans bg-gray-50">
@@ -62,11 +22,11 @@ const App = () => {
       </header>
 
       <main className="flex flex-col md:flex-row flex-1 min-h-0">
-        <ChatPanel messages={conversationState.messages} onSendMessage={handleSendMessage} isTyping={isTyping} />
+        <ChatPanel messages={messages} onSendMessage={sendMessage} isLoading={isLoading} />
         <LeadPanel
-          capturedFields={conversationState.capturedFields}
-          leadScore={conversationState.leadScore}
-          confidence={conversationState.confidence}
+          capturedFields={extractedFields}
+          leadScore={qualification.leadScore}
+          confidence={qualification.confidence}
         />
       </main>
     </div>

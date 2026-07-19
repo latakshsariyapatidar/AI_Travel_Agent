@@ -31,7 +31,7 @@ const LeadPanel = ({ capturedFields, leadScore, confidence }) => {
         </h2>
         <div className='grid grid-cols-2 gap-x-5 gap-y-2'>
           <FieldRow label="Budget" value={capturedFields.budget} />
-          <FieldRow label="Travel Month" value={capturedFields.travelMonth} />
+          <FieldRow label="Travel Month" value={capturedFields.travelDate} />
           <FieldRow label="Trip Type" value={capturedFields.tripType} />
           <FieldRow label="Travellers" value={capturedFields.travellers} />
         </div>
