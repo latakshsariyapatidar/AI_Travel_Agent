@@ -1,5 +1,6 @@
 import { GoogleGenAI } from '@google/genai';
 import { SystemPrompt } from '../prompts/systemPrompt.js';
+import { summaryPrompt } from '../prompts/summaryPrompt.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -9,7 +10,7 @@ const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 const JSON_START = '|||JSON_START|||';
 const JSON_END = '|||JSON_END|||';
 
-export async function callGemini(messages, userMessage) {
+export async function callGemini(messages, userMessage, summary = "") {
     const recent = messages.slice(-8);
 
     const contents = recent.map(msg => ({
@@ -23,11 +24,16 @@ export async function callGemini(messages, userMessage) {
     });
 
     try {
+        let system = SystemPrompt;
+        if (summary) {
+            system += `\n\n--- PREVIOUS CONVERSATION SUMMARY ---\n${summary}\n----------------------------------`;
+        }
+
         const response = await ai.models.generateContent({
             model: process.env.GEMINI_MODEL,
             contents,
             config: {
-                systemInstruction: SystemPrompt,
+                systemInstruction: system,
                 temperature: parseFloat(process.env.GEMINI_MODEL_TEMPERATURE),
             }
         });
@@ -36,7 +42,6 @@ export async function callGemini(messages, userMessage) {
         let reply = raw;
         let extractedFields = null;
 
-        // Try to extract the JSON block if it's there
         if (raw.includes(JSON_START) && raw.includes(JSON_END)) {
             reply = raw.substring(0, raw.indexOf(JSON_START)).trim();
 
@@ -46,17 +51,36 @@ export async function callGemini(messages, userMessage) {
 
             try {
                 extractedFields = JSON.parse(jsonStr).extractedFields || JSON.parse(jsonStr);
-            } catch (parseErr) {
-                console.error("Couldn't parse JSON block:", parseErr.message);
+            } catch (err) {
+                console.error("JSON parse failed:", err.message);
                 console.error("Raw:", raw);
             }
-        } else {
-            console.warn("No JSON markers found, model probably didn't format it right");
         }
 
         return { reply, extractedFields };
     } catch (error) {
-        console.error("Gemini API call failed:", error.message);
+        console.error("Gemini call failed:", error.message);
         throw error;
+    }
+}
+
+export async function generateHistorySummary(overflow, prevSummary = "") {
+    const text = overflow.map(m => `${m.role}: ${m.content}`).join("\n");
+    const prompt = `Previous: ${prevSummary}\n\nNew messages:\n${text}`;
+
+    try {
+        const response = await ai.models.generateContent({
+            model: process.env.GEMINI_MODEL,
+            contents: prompt,
+            config: {
+                systemInstruction: summaryPrompt,
+                temperature: 0.2
+            }
+        });
+
+        return response.text.trim();
+    } catch (err) {
+        console.error("Summary call failed:", err.message);
+        throw err;
     }
 }

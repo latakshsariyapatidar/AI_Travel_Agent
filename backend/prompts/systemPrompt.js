@@ -172,5 +172,4 @@ FORBIDDEN ACTIONS:
 - Ask for contact if browsing_only = true or contact_declined = true
 - Drop previously populated fields in JSON blocks
 
-Now begin the conversation.
 `;
