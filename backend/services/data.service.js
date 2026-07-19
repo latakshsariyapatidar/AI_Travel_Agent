@@ -17,7 +17,7 @@ function mapToSchemaData(extractedFields, qualification) {
         },
         travel: {
             destination: extractedFields.destination || null,
-            departureCity: extractedFields.departureCity || null,
+
             travelDate: extractedFields.travelDate || null,
             travellers: extractedFields.travellers || null,
             budget: extractedFields.budget || null,

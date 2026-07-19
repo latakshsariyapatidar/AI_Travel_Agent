@@ -80,7 +80,7 @@ Add a 12th field for state tracking:
     "travellers": null,
     "budget": null,
     "tripType": null,
-    "departureCity": null,
+
     "duration": null,
     "specialRequirements": null,
     "name": null,
@@ -102,7 +102,7 @@ FIELD PRIORITY (gather in this order):
 4. tripType
 5. budget
 6. duration
-7. departureCity
+
 8. specialRequirements
 9. name (ask only after 1-3 confirmed)
 10. phone (ask only after name provided)

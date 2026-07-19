@@ -7,7 +7,7 @@ const router = express.Router();
 
 const DEFAULT_FIELDS = {
     destination: null,
-    departureCity: null,
+
     travelDate: null,
     travellers: null,
     budget: null,

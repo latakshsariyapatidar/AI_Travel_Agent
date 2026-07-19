@@ -162,7 +162,7 @@ travel-lead-ai/
 | `customer.phone` | String | null until captured |
 | `customer.email` | String | optional per spec |
 | `travel.destination` | String | null until mentioned |
-| `travel.departureCity` | String | null until mentioned |
+
 | `travel.travelDate` | String | stored as user said it — "December", "next March" |
 | `travel.travellers` | Number | stored as integer, not string |
 | `travel.budget` | String | stored as user said it — "Rs 2 lakh", "around 50k" |
@@ -222,7 +222,7 @@ Same field structure as Lead, but written on every turn regardless of score. Act
   "reply": "Congratulations on your upcoming honeymoon! Bali is a fantastic choice. How many of you will be travelling?",
   "extractedFields": {
     "destination": "Bali",
-    "departureCity": null,
+
     "travelDate": "December",
     "travellers": null,
     "budget": null,
@@ -427,7 +427,7 @@ This is parsed by the server — never mention it to the user.
 {
   "extractedFields": {
     "destination": null,
-    "departureCity": null,
+
     "travelDate": null,
     "travellers": null,
     "budget": null,
@@ -465,7 +465,7 @@ const [messages, setMessages] = useState([]);
 
 // Live extracted fields — updates after every server response
 const [extractedFields, setExtractedFields] = useState({
-  destination: null, departureCity: null, travelDate: null,
+  destination: null, travelDate: null,
   travellers: null, budget: null, duration: null,
   tripType: null, specialRequirements: null,
   name: null, phone: null, email: null,
@@ -607,7 +607,7 @@ User: Rahul Verma, +91 9999999999
   },
   "travel": {
     "destination": "Bali",
-    "departureCity": null,
+
     "travelDate": "December",
     "travellers": 2,
     "budget": "Rs 2 lakh",
@@ -651,7 +651,7 @@ User: Not yet, still exploring options.
   },
   "travel": {
     "destination": "Italy or France",
-    "departureCity": null,
+
     "travelDate": "June or July next year",
     "travellers": 4,
     "budget": null,
