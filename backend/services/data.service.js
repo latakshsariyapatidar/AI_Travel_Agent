@@ -101,9 +101,12 @@ export async function getLeadData(conversationId) {
     if (!draft) return null;
     
     const lead = await Lead.findOne({ conversationId }).lean();
-    if (lead) {
-        return lead; 
+    const result = lead ? lead : draft;
+    
+    const conversation = await Conversation.findOne({ conversationId }).lean();
+    if (conversation && conversation.history) {
+        result.history = conversation.history;
     }
     
-    return draft; 
+    return result; 
 }

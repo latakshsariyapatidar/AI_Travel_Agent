@@ -1,25 +1,18 @@
-import React from 'react';
 
 const FieldRow = ({ label, value }) => {
   const isFilled = value !== null && value !== undefined && value !== '';
 
   return (
-    <div className="flex flex-col gap-1 w-full">
-      <span className="text-[12px] font-semibold tracking-[0.5px] text-gray-500 uppercase">
+    <div className="flex flex-col gap-0.5 w-full">
+      <span className="text-xs font-semibold text-gray-500">
         {label}
       </span>
       <div
-        className="flex items-center text-[14px] font-medium transition-colors duration-200"
-        style={{
-          padding: '8px 12px',
-          minHeight: '28px',
-          borderRadius: 'var(--radius-sm)',
-          borderWidth: '1px',
-          borderStyle: 'solid',
-          borderColor: isFilled ? '#86efac' : 'var(--color-neutral)',
-          backgroundColor: isFilled ? '#f0fdf4' : '#ffffff',
-          color: isFilled ? '#166534' : '#cccccc',
-        }}
+        className={`flex items-center text-xs font-medium transition-colors duration-200 rounded-sm px-3 py-[3px] min-h-[30px] border ${
+          isFilled 
+            ? 'border-green-300 bg-gray-50 text-green-800' 
+            : 'border-neutral-200 bg-white text-gray-300'
+        }`}
       >
         {isFilled ? value : 'Not yet shared'}
       </div>
