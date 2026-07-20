@@ -100,13 +100,10 @@ export async function getLeadData(conversationId) {
     const draft = await LeadDraft.findOne({ conversationId }).lean();
     if (!draft) return null;
 
-    const lead = await Lead.findOne({ conversationId }).lean();
-    const result = lead ? lead : draft;
-
     const conversation = await Conversation.findOne({ conversationId }).lean();
     if (conversation && conversation.history) {
-        result.history = conversation.history;
+        draft.history = conversation.history;
     }
 
-    return result;
+    return draft;
 }
