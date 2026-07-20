@@ -37,7 +37,6 @@ export const useChat = () => {
         const data = await res.json();
         if (data.lead) {
           const { lead } = data;
-          // Map DB history ({role, content}) to UI format ({role, text}) if needed, or just use content
           if (lead.history && lead.history.length > 0) {
             setMessages(lead.history.map(m => ({ role: m.role, text: m.content })));
           } else {

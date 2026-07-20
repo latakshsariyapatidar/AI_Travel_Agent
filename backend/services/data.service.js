@@ -52,7 +52,7 @@ export async function upsertLeadDraft(conversationId, extractedFields, qualifica
  */
 export async function upsertLead(conversationId, extractedFields, qualification) {
     const data = mapToSchemaData(extractedFields, qualification);
-    
+
     return await Lead.findOneAndUpdate(
         { conversationId },
         { $set: data },
@@ -65,10 +65,10 @@ export async function upsertLead(conversationId, extractedFields, qualification)
  */
 export async function upsertConversation(conversationId, messages, previousSummary = "") {
     const trimmedHistory = messages.slice(-8);
-    
+
     if (messages.length > 8) {
         const overflowMessages = messages.slice(0, -8);
-        
+
         // It runs asynchronously so we don't block the user's chat reply.
         generateHistorySummary(overflowMessages, previousSummary)
             .then(async (newSummary) => {
@@ -85,8 +85,8 @@ export async function upsertConversation(conversationId, messages, previousSumma
 
     return await Conversation.findOneAndUpdate(
         { conversationId },
-        { 
-            $set: { history: trimmedHistory } 
+        {
+            $set: { history: trimmedHistory }
         },
         { upsert: true, new: true }
     );
@@ -99,14 +99,14 @@ export async function upsertConversation(conversationId, messages, previousSumma
 export async function getLeadData(conversationId) {
     const draft = await LeadDraft.findOne({ conversationId }).lean();
     if (!draft) return null;
-    
+
     const lead = await Lead.findOne({ conversationId }).lean();
     const result = lead ? lead : draft;
-    
+
     const conversation = await Conversation.findOne({ conversationId }).lean();
     if (conversation && conversation.history) {
         result.history = conversation.history;
     }
-    
-    return result; 
+
+    return result;
 }

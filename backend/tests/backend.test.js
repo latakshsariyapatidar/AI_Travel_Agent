@@ -62,7 +62,7 @@ describe('Backend Tests', () => {
         it('should set leadReady when qualified and contact info present', () => {
              const fields = { destination: 'Bali', travelDate: 'December', travellers: 2, budget: '100k', name: 'John', phone: '12345' };
              const result = calculateScore(fields);
-             expect(result.leadScore).toBe(80);
+             expect(result.leadScore).toBe(75);
              expect(result.leadReady).toBe(true);
         });
     });

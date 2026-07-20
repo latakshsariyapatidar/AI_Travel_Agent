@@ -342,17 +342,18 @@ Scoring is additive. Each field contributes a fixed number of points when presen
 |---|---|---|
 | Destination specified | +20 | Highest weight — the core of any travel enquiry |
 | Travel date — specific (month/year) | +15 | e.g. "December", "March 2026" |
-| Travel date — vague ("next year", "sometime") | +8 | Partial credit — intent present but planning is loose |
+| Travel date — vague ("next year", "sometime") | +5 | Partial credit — intent present but planning is loose |
 | Traveller count | +10 | |
+| Duration | +10 | Length of the trip |
 | Budget specified | +15 | Strong buying signal |
 | Trip type (honeymoon, family, solo, etc.) | +10 | Indicates purpose and package type |
-| Departure city | +5 | Secondary detail |
 | Special requirements | +5 | Secondary detail |
-| Name captured | +10 | Contact qualification begins |
+| Name captured | +5 | Contact qualification begins |
 | Phone captured | +10 | Contact qualification complete |
-| **Maximum** | **100** | |
+| Email captured | +5 | Secondary contact info |
+| **Maximum** | **110 (capped at 100)** | |
 
-**How vague dates are detected:** Simple regex on the `travelDate` string — `/next year|sometime|later|not sure|flexible/i`. If matched, partial credit (+8). Otherwise full credit (+15) for any non-null date string.
+**How vague dates are detected:** Simple regex on the `travelDate` string — `/next year|sometime|later|not sure|flexible/i`. If matched, partial credit (+5). Otherwise full credit (+15) for any non-null date string.
 
 ### Confidence Mapping
 
@@ -399,12 +400,12 @@ while naturally gathering key travel details over the conversation.
 CONVERSATION RULES:
 - Be natural. Never ask multiple questions at once.
 - Ask ONE follow-up question per response, targeting the most important missing field.
-- Do NOT ask for name or phone until: destination + at least one of (date, budget, travellers) is known.
+- VALUE FIRST: Do NOT ask for name or phone until: destination + travel date + travellers are known AND you have already provided some travel suggestions or a rough itinerary to build trust.
 - If the user volunteers contact info early, accept it gracefully and continue.
 - If the user says "just browsing" or "only exploring", be helpful but do not push for contact.
 - If the user declines contact details, respect it completely and keep helping.
 - Vague answers like "sometime next year" are valid — accept and store them.
-- Once you have destination + date + travellers + budget, ask for contact naturally:
+- Once you have destination + date + travellers + budget AND have provided value, ask for contact naturally:
   "To connect you with one of our travel consultants for a personalised package,
    may I have your name and a contact number?"
 
@@ -412,13 +413,12 @@ FIELD PRIORITY (gather roughly in this order):
 1. Destination
 2. Travel date / month
 3. Number of travellers
-4. Budget
-5. Trip type (honeymoon, family, solo, business)
-6. Departure city
-7. Duration
-8. Special requirements
-9. Name → Phone
-10. Email
+4. Trip type
+5. Duration
+6. Budget
+7. Special requirements
+8. Name → Phone (only after 1-3 are met AND value provided)
+9. Email
 
 After EVERY response, append a JSON block between these exact delimiters.
 This is parsed by the server — never mention it to the user.
@@ -427,7 +427,6 @@ This is parsed by the server — never mention it to the user.
 {
   "extractedFields": {
     "destination": null,
-
     "travelDate": null,
     "travellers": null,
     "budget": null,
@@ -437,6 +436,12 @@ This is parsed by the server — never mention it to the user.
     "name": null,
     "phone": null,
     "email": null
+  },
+  "state": {
+    "browsing_only": false,
+    "contact_declined": false,
+    "has_contact_request": false,
+    "provided_suggestions": false
   }
 }
 |||JSON_END|||

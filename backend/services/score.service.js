@@ -25,7 +25,7 @@ export function calculateScore(fields) {
     if (fields.travelDate) {
         const vaguePatterns = /next year|sometime|later|not sure|flexible|eventually|soon|whenever|tbd|to be determined|haven't decided|undecided|not decided|open|maybe|probably|roughly|still deciding|planning to|hope to|looking to|thinking|considering|no idea|don't know|unsure|unclear|pending|tba|someday|in a few months|idk|i guess|guess|uncertain|spring|summer|fall|autumn|winter|^[a-z]+\s*\?|\?\s*$/i;
         const isVague = vaguePatterns.test(fields.travelDate);
-        score += isVague ? 8 : 15;
+        score += isVague ? 5 : 15;
         tags.push(isVague ? "Vague date" : "Specific date");
         summaryBits.push(`around ${fields.travelDate}`);
     }
@@ -33,6 +33,12 @@ export function calculateScore(fields) {
         score += 10;
         tags.push("Traveller count");
         summaryBits.push(`for ${fields.travellers} people`);
+    }
+
+    if (fields.duration) {
+        score += 10;
+        tags.push("Duration");
+        summaryBits.push(`for ${fields.duration}`);
     }
 
     if (fields.budget) {
@@ -53,13 +59,18 @@ export function calculateScore(fields) {
     }
 
     if (fields.name) {
-        score += 10;
+        score += 5;
         tags.push("Name");
     }
 
     if (fields.phone) {
         score += 10;
         tags.push("Phone");
+    }
+
+    if (fields.email) {
+        score += 5;
+        tags.push("Email");
     }
 
     const leadScore = Math.min(score, 100);
