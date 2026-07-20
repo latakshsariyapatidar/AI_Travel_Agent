@@ -2,6 +2,8 @@
 
 This is the overarching architecture and documentation for the AI Travel Assistant, designed to interface with the Google Gemini API. This document details the architectural decisions and system design before implementation begins.
 
+**For installation and local setup instructions, please refer to the [Getting Started Guide](./docs/getting-started.md).**
+
 ---
 
 ## Table of Contents
